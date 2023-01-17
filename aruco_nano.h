@@ -100,19 +100,19 @@ std::vector<Marker>  MarkerDetector::detectInternal(const cv::Mat &inputImg, uns
         cv::cvtColor(inputImg,cvtColorOutputMat,cv::COLOR_BGR2GRAY);
     else cvtColorOutputMat=inputImg;
     cv::adaptiveThreshold(cvtColorOutputMat, thresholdedMat, 255.,cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY_INV, 7, 7);
-    std::vector<std::vector<cv::Point>> _1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5;
-    std::vector<cv::Point> _ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Point> maybeCorners;
     cv::RNG cvRng;
-    cv::findContours(thresholdedMat, _1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5, cv::noArray(), cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
+    cv::findContours(thresholdedMat, contours, cv::noArray(), cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
     cv::Mat _e5e59d10f196504b6e08ac7785f84430a61e1558fd6246075a9566edaab2e814(8,8,CV_8UC1);
-    for (unsigned int _de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7 = 0; _de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7 < _1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5.size(); _de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7++)
+    for (unsigned int i = 0; i < contours.size(); i++)
     {
-        if (50 > int(_1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5[_de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7].size())  ) continue;
-        cv::approxPolyDP(_1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5[_de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7], _ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9, double(_1ab28beae67d11518b50009d8d6bf62bdb2b029d9d462dd54dac8a94c948a9e5[_de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7].size()) * 0.05, true);
-        if (_ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9.size() != 4 || !cv::isContourConvex(_ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9)) continue;
+        if (50 > int(contours[i].size())  ) continue;
+        cv::approxPolyDP(contours[i], maybeCorners, double(contours[i].size()) * 0.05, true);
+        if (maybeCorners.size() != 4 || !cv::isContourConvex(maybeCorners)) continue;
         Marker _ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e;
         for (int _189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7 = 0; _189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7 < 4; _189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7++)
-            _ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e.push_back( cv::Point2f( _ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9[_189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7].x,_ef74802cdfb0250410a8fc5f4f1a956c0bd18c04768aaa954fff6e2f98fa87d9[_189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7].y));
+            _ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e.push_back( cv::Point2f( maybeCorners[_189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7].x,maybeCorners[_189f40034be7a199f1fa9891668ee3ab6049f82d38c68be70f596eab2e1857b7].y));
         _ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e=_32674b0393ce09cbb2335aaefa8ef8579e14890d49ea4a6034287e01ed3da198(_ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e);
         for(int _de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7=0;_de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7<_469b059f634d94c9e4ec3cbfa661e4d400db2637140ddd3b223a6a266e38afcf && _ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e.id==-1;_de7d1b721a1e0632b7cf04edf5032c8ecffa9f9a08492152b926f1a5a7e765d7++){
             auto _00a6580137a3a1ab1158cfb7f034486e74b561dbbeb40a375596dc0068c7b403=_ed5b8120601641c516d02ed9dc643a59648524248d5e2af877da39ea253c723e;
